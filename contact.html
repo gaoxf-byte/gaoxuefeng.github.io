@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 字体 -->
+  <link href="https://fonts.googleapis.cn/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/jquery/jquery-3.7.1.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/lucide/lucide-1.11.0.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/tailwindcss/tailwindcss-browser-4.2.4.min.js"></script>
+
+  <style type="text/tailwindcss">
+    @theme {
+      /* === 品牌色 - 金融风深蓝+金色 === */
+      --color-primary:              #071B3A;
+      --color-primary-container:    #1A3A6B;
+      --color-on-primary:           #ffffff;
+      /* 金色强调色 */
+      --color-accent:               #D5A84D;
+      --color-accent-light:         #E8C77A;
+      /* 青色辅助色 */
+      --color-teal:                 #2BC4B6;
+      /* === 背景 / 表面 === */
+      --color-background:                 #F3F7FB;
+      --color-surface-container-lowest:   #FFFFFF;
+      --color-surface:                    #FFFFFF;
+      --color-surface-container:          #E8EEF5;
+      --color-surface-container-high:     #DDE5EE;
+      --color-surface-container-highest:  #CBD5E1;
+      /* === 文字 === */
+      --color-on-surface:           #102033;
+      --color-on-surface-variant:   #65758A;
+      /* === 功能色 === */
+      --color-success:  #22c55e;
+      --color-error:    #ef4444;
+      --color-warning:  #f59e0b;
+      /* === 边框 === */
+      --color-outline:          #94A3B8;
+      --color-outline-variant:  #CBD5E1;
+      /* === 圆角 - 规整风格 === */
+      --radius-sm:   0.25rem;
+      --radius-md:   0.375rem;
+      --radius-lg:   0.5rem;
+      --radius-xl:   0.75rem;
+      --radius-2xl:  1rem;
+      --radius-full: 9999px;
+      /* === 阴影 - 精致克制 === */
+      --shadow-card:   0 2px 8px rgba(7,27,58,0.08);
+      --shadow-float:  0 10px 30px rgba(7,27,58,0.12);
+      --shadow-dialog: 0 25px 50px rgba(7,27,58,0.18);
+      /* === 字体 === */
+      --font-sans: "Inter", "Noto Sans SC", system-ui, sans-serif;
+    }
+  </style>
+
+  <!-- 图片兜底 -->
+  <script>
+    document.addEventListener('error', function (e) {
+      const img = e.target;
+      if (img.tagName !== 'IMG' || img.dataset.fallback) return;
+      img.dataset.fallback = '1';
+      const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const cat = img.getAttribute('data-category') || '其他';
+      const alt = img.getAttribute('alt') || '';
+      const label = esc(alt.length > 8 ? alt.slice(0, 8) + '…' : alt);
+      const icons = { '人物': '👤', '自然风景': '🏞', '动物': '🐾', '建筑城市': '🏙', '运动体育': '⚽', '交通工具': '🚗', '食物': '🍽', '服饰时尚': '👗', '商业科技': '💼', '游戏娱乐': '🎮', '艺术': '🎨', '其他': '🖼' };
+      const icon = icons[cat] || '🖼';
+      const w = img.width || 400, h = img.height || 300;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="45%" text-anchor="middle" font-size="${Math.min(w, h) * 0.18}" dominant-baseline="central">${icon}</text><text x="50%" y="68%" text-anchor="middle" font-size="${Math.min(w, h) * 0.07}" fill="%239ca3af" font-family="system-ui,sans-serif" dominant-baseline="central">${label}</text></svg>`;
+      img.src = 'data:image/svg+xml,' + svg;
+    }, true);
+  </script>
+</head>
+
+<body class="bg-background text-on-surface font-sans">
+
+  <!-- @nav:start 导航组件，不需要的页面则不要复制此段（从 @nav:start 到 @nav:end） -->
+  <header class="bg-surface sticky top-0 z-40 h-16 border-b border-outline-variant/20">
+    <div class="max-w-6xl mx-auto h-full flex items-center justify-between px-6">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-md bg-primary flex items-center justify-center">
+          <span class="text-accent font-bold text-lg">高</span>
+        </div>
+        <div class="flex flex-col leading-tight">
+          <span class="font-semibold text-base text-on-surface">高学锋</span>
+          <span class="text-xs text-on-surface-variant">专利代理人 · 品源</span>
+        </div>
+      </div>
+      <nav class="hidden md:flex items-center gap-1">
+        <a href="home.html" class="px-3 py-1.5 text-sm font-medium text-on-surface hover:text-primary hover:bg-surface-container rounded-md transition-colors">首页</a>
+        <a href="resume.html" class="px-3 py-1.5 text-sm font-medium text-on-surface hover:text-primary hover:bg-surface-container rounded-md transition-colors">个人简历</a>
+        <a href="contact.html" class="px-3 py-1.5 text-sm font-medium text-primary bg-primary/10 rounded-md transition-colors" aria-current="page">联系方式</a>
+      </nav>
+      <a href="https://www.boip.com.cn" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition-opacity">
+        <i data-lucide="external-link" class="w-4 h-4"></i>
+        品源官网
+      </a>
+    </div>
+  </header>
+  <!-- @nav:end 导航组件，不需要的页面则不要复制此段 -->
+
+  <main class="max-w-6xl mx-auto px-6 py-10">
+    <!-- @main-content:start -->
+
+    <!-- 页面标题区 -->
+    <div class="text-center mb-10">
+      <h1 class="text-2xl font-bold text-primary mb-2">联系我</h1>
+      <p class="text-sm text-on-surface-variant">欢迎就专利相关事宜与我联系，我将竭诚为您提供专业的专利申请咨询服务</p>
+    </div>
+
+    <!-- 第一行：微信 + 公众号 卡片 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+      <!-- 卡片-微信联系方式 -->
+      <div class="bg-surface rounded-lg shadow-card p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 rounded-md bg-teal/10 flex items-center justify-center">
+            <i data-lucide="message-circle" class="w-5 h-5 text-teal"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-on-surface">微信咨询</h2>
+            <p class="text-xs text-on-surface-variant">扫码添加微信好友，随时沟通</p>
+          </div>
+        </div>
+
+        <!-- 微信号展示 -->
+        <div class="bg-surface-container rounded-md px-4 py-3 flex items-center justify-between mb-5">
+          <div class="flex items-center gap-2">
+            <i data-lucide="user" class="w-4 h-4 text-on-surface-variant"></i>
+            <span class="text-sm font-medium text-on-surface">gao1428334797</span>
+          </div>
+          <button id="btn-copy-wechat" class="text-xs font-medium text-primary hover:text-primary-container transition-colors">
+            复制
+          </button>
+        </div>
+
+        <!-- 微信二维码占位区 -->
+        <div class="flex justify-center mb-4">
+          <div class="w-40 h-40 bg-surface-container rounded-md flex items-center justify-center border-2 border-dashed border-outline-variant/30">
+            <div class="text-center">
+              <i data-lucide="qr-code" class="w-12 h-12 text-on-surface-variant/40 mx-auto mb-2"></i>
+              <p class="text-xs text-on-surface-variant">微信二维码</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 备注说明 -->
+        <div class="bg-accent/5 border border-accent/20 rounded-md px-3 py-2.5">
+          <div class="flex items-start gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-accent shrink-0 mt-0.5"></i>
+            <p class="text-xs text-on-surface-variant leading-relaxed">添加时请备注<span class="font-medium text-primary">"专利咨询+姓名"</span>，以便我快速通过并了解您的需求</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡片-公众号 -->
+      <div class="bg-surface rounded-lg shadow-card p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 rounded-md bg-primary/10 flex items-center justify-center">
+            <i data-lucide="book-open" class="w-5 h-5 text-primary"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-on-surface">公众号</h2>
+            <p class="text-xs text-on-surface-variant">关注获取最新专利资讯与实务技巧</p>
+          </div>
+        </div>
+
+        <!-- 公众号名称 -->
+        <div class="bg-surface-container rounded-md px-4 py-3 flex items-center gap-2 mb-5">
+          <i data-lucide="megaphone" class="w-4 h-4 text-on-surface-variant"></i>
+          <span class="text-sm font-medium text-on-surface">通向专利授权之路</span>
+        </div>
+
+        <!-- 公众号二维码占位区 -->
+        <div class="flex justify-center mb-4">
+          <div class="w-40 h-40 bg-surface-container rounded-md flex items-center justify-center border-2 border-dashed border-outline-variant/30">
+            <div class="text-center">
+              <i data-lucide="qr-code" class="w-12 h-12 text-on-surface-variant/40 mx-auto mb-2"></i>
+              <p class="text-xs text-on-surface-variant">公众号二维码</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 公众号简介 -->
+        <div class="bg-primary/5 border border-primary/10 rounded-md px-3 py-2.5">
+          <p class="text-xs text-on-surface-variant leading-relaxed">
+            <span class="font-medium text-primary">分享内容：</span>专利申请实务、授权技巧、行业资讯、案例解析。帮助发明人更好地理解专利制度，提高专利授权率。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第二行：其他联系方式 + 公司信息 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+      <!-- 卡片-其他联系方式 -->
+      <div class="bg-surface rounded-lg shadow-card p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 rounded-md bg-accent/10 flex items-center justify-center">
+            <i data-lucide="contact" class="w-5 h-5 text-accent"></i>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-on-surface">其他联系方式</h2>
+            <p class="text-xs text-on-surface-variant">多种方式，便捷沟通</p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <!-- 联系方式-邮箱 -->
+          <div class="flex items-start gap-3 pb-4 border-b border-outline-variant/10">
+            <div class="w-8 h-8 rounded-md bg-surface-container flex items-center justify-center shrink-0">
+              <i data-lucide="mail" class="w-4 h-4 text-primary"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-on-surface-variant mb-0.5">电子邮箱</p>
+              <p class="text-sm font-medium text-on-surface truncate">gaoxuefeng@boip.com.cn</p>
+            </div>
+            <button id="btn-copy-email" class="text-xs font-medium text-primary hover:text-primary-container transition-colors shrink-0">
+              复制
+            </button>
+          </div>
+
+          <!-- 联系方式-办公电话 -->
+          <div class="flex items-start gap-3 pb-4 border-b border-outline-variant/10">
+            <div class="w-8 h-8 rounded-md bg-surface-container flex items-center justify-center shrink-0">
+              <i data-lucide="phone" class="w-4 h-4 text-primary"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-on-surface-variant mb-0.5">办公电话</p>
+              <p class="text-sm font-medium text-on-surface">0512-89889809</p>
+            </div>
+          </div>
+
+          <!-- 联系方式-公司地址 -->
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-md bg-surface-container flex items-center justify-center shrink-0">
+              <i data-lucide="map-pin" class="w-4 h-4 text-primary"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-on-surface-variant mb-0.5">办公地址</p>
+              <p class="text-sm font-medium text-on-surface">苏州吴中区东吴北路28号国裕创新大厦二期1008室</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡片-公司链接 -->
+      <div class="bg-surface rounded-lg shadow-card p-6">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 rounded-md bg-primary flex items-center justify-center">
+            <span class="text-accent font-bold text-lg">品</span>
+          </div>
+          <div>
+            <h2 class="text-base font-semibold text-on-surface">北京品源专利代理有限公司</h2>
+            <p class="text-xs text-on-surface-variant">PINYUAN IP & LAW FIRM</p>
+          </div>
+        </div>
+
+        <!-- 公司简介 -->
+        <p class="text-sm text-on-surface-variant leading-relaxed mb-5">
+          品源专利成立于2004年，是国内领先的综合性知识产权服务机构。总部位于北京，在上海、广州、深圳、杭州等十余座城市设有分支机构，为全球客户提供专利、商标、版权等全方位知识产权服务。
+        </p>
+
+        <!-- 公司资质标签 -->
+        <div class="flex flex-wrap gap-2 mb-5">
+          <span class="inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-medium bg-accent/10 text-accent">全国知识产权服务品牌机构</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-medium bg-primary/10 text-primary">中国专利代理十强</span>
+        </div>
+
+        <!-- 访问官网按钮 -->
+        <a id="btn-visit-website" href="https://www.boip.com.cn" target="_blank"
+           class="w-full inline-flex items-center justify-center gap-2 bg-primary text-on-primary px-4 py-2.5 rounded-md text-sm font-medium hover:opacity-90 transition-opacity">
+          <i data-lucide="globe" class="w-4 h-4"></i>
+          访问品源官网
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- 第三行：智能体入口卡片（金色醒目样式） -->
+    <div class="bg-gradient-to-br from-accent via-accent-light to-accent rounded-lg shadow-float p-6 relative overflow-hidden">
+      <!-- 装饰性背景元素 -->
+      <div class="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -translate-y-24 translate-x-24"></div>
+      <div class="absolute bottom-0 left-0 w-32 h-32 bg-white/5 rounded-full translate-y-16 -translate-x-16"></div>
+
+      <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-5">
+        <!-- 左侧图标与文字 -->
+        <div class="flex items-start gap-4 flex-1">
+          <div class="w-14 h-14 rounded-lg bg-white/20 backdrop-blur flex items-center justify-center shrink-0">
+            <i data-lucide="bot" class="w-7 h-7 text-primary"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="inline-flex items-center px-2 py-0.5 rounded-sm text-xs font-bold bg-primary text-white">专利教练</span>
+              <span class="text-xs font-semibold text-primary/70">AI 智能体</span>
+            </div>
+            <h3 class="text-lg font-bold text-primary mb-1">交底书减肥</h3>
+            <p class="text-sm text-primary/70 leading-relaxed max-w-lg">
+              智能分析您的技术交底书，识别核心创新点，精简冗余表述，帮助您产出高质量、易授权的专利申请文件。随时在线，即时响应。
+            </p>
+          </div>
+        </div>
+
+        <!-- 右侧按钮 -->
+        <div class="flex flex-col gap-2 shrink-0 w-full md:w-auto">
+          <button id="btn-start-coach"
+                  class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-md text-sm font-semibold hover:bg-primary-container transition-colors shadow-lg">
+            <i data-lucide="sparkles" class="w-4 h-4"></i>
+            开始咨询
+          </button>
+          <p class="text-xs text-primary/50 text-center md:text-right">7×24小时在线服务</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部说明 -->
+    <div class="text-center mt-10 pt-6 border-t border-outline-variant/10">
+      <p class="text-xs text-on-surface-variant">
+        工作时间：周一至周五 9:00 - 17:30 · 紧急事务可随时微信联系
+      </p>
+    </div>
+
+    <!-- @main-content:end -->
+  </main>
+
+  <script>
+    $(function() {
+      // 复制微信号按钮
+      $('#btn-copy-wechat').on('click', function() {
+        // 复制功能 - 后续应实现：
+        // 1. 获取微信号文本 "gaoxuefeng-patent"
+        // 2. 调用 navigator.clipboard.writeText() 复制到剪贴板
+        // 3. 按钮文字变为 "已复制"，2秒后恢复
+        // 4. 复制失败时提示用户手动复制
+        const wechatId = 'gaoxuefeng-patent';
+        console.log('复制微信号:', wechatId);
+        $(this).text('已复制');
+        const $btn = $(this);
+        setTimeout(function() {
+          $btn.text('复制');
+        }, 2000);
+      });
+
+      // 复制邮箱按钮
+      $('#btn-copy-email').on('click', function() {
+        // 复制功能 - 后续应实现：
+        // 1. 获取邮箱文本 "gaoxuefeng@boip.com.cn"
+        // 2. 调用 navigator.clipboard.writeText() 复制到剪贴板
+        // 3. 按钮文字变为 "已复制"，2秒后恢复
+        // 4. 复制失败时提示用户手动复制
+        const email = 'gaoxuefeng@boip.com.cn';
+        console.log('复制邮箱:', email);
+        $(this).text('已复制');
+        const $btn = $(this);
+        setTimeout(function() {
+          $btn.text('复制');
+        }, 2000);
+      });
+
+      // 访问官网按钮（已通过 a 标签 href 实现跳转，此处仅记录日志）
+      $('#btn-visit-website').on('click', function() {
+        console.log('访问品源官网: https://www.boip.com.cn');
+      });
+
+      // 智能体开始咨询按钮
+      $('#btn-start-coach').on('click', function() {
+        // 开始咨询功能 - 后续应实现：
+        // 1. 打开专利教练智能体对话窗口或跳转到智能体页面
+        // 2. 如果是弹窗形式，展示对话界面，包含欢迎语和输入框
+        // 3. 用户输入问题后调用智能体接口获取回复
+        // 4. 支持上传交底书文件进行分析
+        // 5. 记录用户对话历史
+        console.log('启动专利教练智能体 - 交底书减肥');
+      });
+    });
+  </script>
+
+  <script>lucide.createIcons();</script>
+</body>
+
+</html>

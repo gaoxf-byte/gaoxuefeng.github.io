@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- 字体 -->
+  <link href="https://fonts.googleapis.cn/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/jquery/jquery-3.7.1.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/lucide/lucide-1.11.0.min.js"></script>
+  <script src="https://lf-code-agent.coze.cn/obj/x-ai-cn/cdn/tailwindcss/tailwindcss-browser-4.2.4.min.js"></script>
+
+  <style type="text/tailwindcss">
+    @theme {
+      /* === 品牌色 - 金融风深蓝+金色 === */
+      --color-primary:              #071B3A;
+      --color-primary-container:    #1A3A6B;
+      --color-on-primary:           #ffffff;
+      /* 金色强调色 */
+      --color-accent:               #D5A84D;
+      --color-accent-light:         #E8C77A;
+      /* 青色辅助色 */
+      --color-teal:                 #2BC4B6;
+      /* === 背景 / 表面 === */
+      --color-background:                 #F3F7FB;
+      --color-surface-container-lowest:   #FFFFFF;
+      --color-surface:                    #FFFFFF;
+      --color-surface-container:          #E8EEF5;
+      --color-surface-container-high:     #DDE5EE;
+      --color-surface-container-highest:  #CBD5E1;
+      /* === 文字 === */
+      --color-on-surface:           #102033;
+      --color-on-surface-variant:   #65758A;
+      /* === 功能色 === */
+      --color-success:  #22c55e;
+      --color-error:    #ef4444;
+      --color-warning:  #f59e0b;
+      /* === 边框 === */
+      --color-outline:          #94A3B8;
+      --color-outline-variant:  #CBD5E1;
+      /* === 圆角 - 规整风格 === */
+      --radius-sm:   0.25rem;
+      --radius-md:   0.375rem;
+      --radius-lg:   0.5rem;
+      --radius-xl:   0.75rem;
+      --radius-2xl:  1rem;
+      --radius-full: 9999px;
+      /* === 阴影 - 精致克制 === */
+      --shadow-card:   0 2px 8px rgba(7,27,58,0.08);
+      --shadow-float:  0 10px 30px rgba(7,27,58,0.12);
+      --shadow-dialog: 0 25px 50px rgba(7,27,58,0.18);
+      /* === 字体 === */
+      --font-sans: "Inter", "Noto Sans SC", system-ui, sans-serif;
+    }
+  </style>
+
+  <!-- 图片兜底 -->
+  <script>
+    document.addEventListener('error', function (e) {
+      const img = e.target;
+      if (img.tagName !== 'IMG' || img.dataset.fallback) return;
+      img.dataset.fallback = '1';
+      const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const cat = img.getAttribute('data-category') || '其他';
+      const alt = img.getAttribute('alt') || '';
+      const label = esc(alt.length > 8 ? alt.slice(0, 8) + '…' : alt);
+      const icons = { '人物': '👤', '自然风景': '🏞', '动物': '🐾', '建筑城市': '🏙', '运动体育': '⚽', '交通工具': '🚗', '食物': '🍽', '服饰时尚': '👗', '商业科技': '💼', '游戏娱乐': '🎮', '艺术': '🎨', '其他': '🖼' };
+      const icon = icons[cat] || '🖼';
+      const w = img.width || 400, h = img.height || 300;
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><rect width="100%" height="100%" fill="%23f3f4f6"/><text x="50%" y="45%" text-anchor="middle" font-size="${Math.min(w, h) * 0.18}" dominant-baseline="central">${icon}</text><text x="50%" y="68%" text-anchor="middle" font-size="${Math.min(w, h) * 0.07}" fill="%239ca3af" font-family="system-ui,sans-serif" dominant-baseline="central">${label}</text></svg>`;
+      img.src = 'data:image/svg+xml,' + svg;
+    }, true);
+  </script>
+</head>
+
+<body class="bg-background text-on-surface font-sans">
+
+  <!-- @nav:start 导航组件 -->
+  <header class="bg-surface sticky top-0 z-40 h-16 border-b border-outline-variant/20">
+    <div class="max-w-6xl mx-auto h-full flex items-center justify-between px-6">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-md bg-primary flex items-center justify-center">
+          <span class="text-accent font-bold text-lg">高</span>
+        </div>
+        <div class="flex flex-col leading-tight">
+          <span class="font-semibold text-base text-on-surface">高学锋</span>
+          <span class="text-xs text-on-surface-variant">专利代理人 · 品源</span>
+        </div>
+      </div>
+      <nav class="hidden md:flex items-center gap-1">
+        <a href="home.html" class="px-3 py-1.5 text-sm font-medium text-on-surface hover:text-primary hover:bg-surface-container rounded-md transition-colors">首页</a>
+        <a href="resume.html" class="px-3 py-1.5 text-sm font-medium text-primary bg-primary/10 rounded-md transition-colors" aria-current="page">个人简历</a>
+        <a href="contact.html" class="px-3 py-1.5 text-sm font-medium text-on-surface hover:text-primary hover:bg-surface-container rounded-md transition-colors">联系方式</a>
+      </nav>
+      <a href="https://www.boip.com.cn" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition-opacity">
+        <i data-lucide="external-link" class="w-4 h-4"></i>
+        品源官网
+      </a>
+    </div>
+  </header>
+  <!-- @nav:end 导航组件 -->
+
+  <main class="max-w-6xl mx-auto px-6 py-10">
+    <!-- @main-content:start -->
+
+    <!-- ========== 个人简介头部 ========== -->
+    <section id="profile-header" class="bg-surface rounded-xl shadow-card overflow-hidden mb-10">
+      <!-- 顶部装饰条 -->
+      <div class="h-24 bg-gradient-to-r from-primary via-primary-container to-primary relative">
+        <div class="absolute inset-0 opacity-10">
+          <div class="absolute top-0 right-0 w-64 h-64 bg-accent rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        </div>
+      </div>
+      <div class="px-8 pb-8 -mt-16 relative">
+        <div class="flex flex-col md:flex-row md:items-end gap-6">
+          <!-- 头像 -->
+          <div class="relative shrink-0">
+            <div class="w-32 h-32 rounded-xl bg-surface p-1 shadow-float">
+              <div class="w-full h-full rounded-lg bg-gradient-to-br from-primary to-primary-container flex items-center justify-center">
+                <span class="text-accent text-4xl font-bold">高</span>
+              </div>
+            </div>
+            <div class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-accent flex items-center justify-center shadow-md">
+              <i data-lucide="badge-check" class="w-4 h-4 text-primary"></i>
+            </div>
+          </div>
+          <!-- 基本信息 -->
+          <div class="flex-1 pb-1">
+            <div class="flex flex-wrap items-center gap-3 mb-2">
+              <h1 id="profile-name" class="text-2xl font-bold text-on-surface">高学锋</h1>
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-accent/15 text-accent text-xs font-semibold">
+                <i data-lucide="award" class="w-3 h-3"></i>
+                资深专利代理人
+              </span>
+            </div>
+            <p id="profile-title" class="text-base text-on-surface-variant mb-3">北京品源专利代理有限公司 · 电学事业部</p>
+            <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-on-surface-variant">
+              <div class="flex items-center gap-1.5">
+                <i data-lucide="briefcase" class="w-4 h-4 text-primary"></i>
+                <span>专业领域：<span class="text-on-surface font-medium">电学 / 半导体 / 显示技术</span></span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <i data-lucide="building-2" class="w-4 h-4 text-primary"></i>
+                <span>部门：<span class="text-on-surface font-medium">国内电学事业部</span></span>
+              </div>
+            </div>
+          </div>
+          <!-- 操作按钮 -->
+          <div class="flex flex-col gap-2 md:pb-1">
+            <a href="contact.html" id="btn-contact-top" class="inline-flex items-center justify-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded-md text-sm font-medium hover:opacity-90 transition-opacity">
+              <i data-lucide="mail" class="w-4 h-4"></i>
+              联系我
+            </a>
+            <button id="btn-download-resume" class="inline-flex items-center justify-center gap-2 bg-surface-container text-on-surface px-5 py-2.5 rounded-md text-sm font-medium hover:bg-surface-container-high transition-colors">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              下载简历
+            </button>
+          </div>
+        </div>
+        <!-- 专业概述 -->
+        <div class="mt-6 pt-6 border-t border-outline-variant/20">
+          <p id="profile-summary" class="text-sm text-on-surface leading-relaxed">
+            高学锋先生于2016年加入北京品源专利代理有限公司，拥有多年专利代理行业经验，专注于电学领域的专利申请与保护。主要代理专利撰写、审查意见答复、检索、复审、咨询、专利挖掘、项目布局等专利业务。擅长电子电路技术、半导体技术、显示技术、激光雷达技术等多个技术方向，服务过天马微电子、维信诺、镭神智能、中科院等多家知名企业和科研院所。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== 核心数据概览 ========== -->
+    <section id="stats-overview" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+      <!-- 数据卡片-从业年限 -->
+      <div class="bg-surface rounded-xl shadow-card p-5 border-l-4 border-accent">
+        <div class="text-3xl font-bold text-primary mb-1">10<span class="text-lg text-on-surface-variant font-normal">+</span></div>
+        <div class="text-sm text-on-surface-variant">年专利代理经验</div>
+      </div>
+      <!-- 数据卡片-服务客户 -->
+      <div class="bg-surface rounded-xl shadow-card p-5 border-l-4 border-primary">
+        <div class="text-3xl font-bold text-primary mb-1">40<span class="text-lg text-on-surface-variant font-normal">+</span></div>
+        <div class="text-sm text-on-surface-variant">家合作客户</div>
+      </div>
+      <!-- 数据卡片-技术领域 -->
+      <div class="bg-surface rounded-xl shadow-card p-5 border-l-4 border-accent">
+        <div class="text-3xl font-bold text-primary mb-1">8<span class="text-lg text-on-surface-variant font-normal">+</span></div>
+        <div class="text-sm text-on-surface-variant">大技术方向</div>
+      </div>
+      <!-- 数据卡片-团队管理 -->
+      <div class="bg-surface rounded-xl shadow-card p-5 border-l-4 border-primary">
+        <div class="text-3xl font-bold text-primary mb-1">团队<span class="text-lg text-on-surface-variant font-normal">管理</span></div>
+        <div class="text-sm text-on-surface-variant">苏州电学小组组长</div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- 左侧主内容区 -->
+      <div class="lg:col-span-2 space-y-10">
+
+        <!-- ========== 教育背景 ========== -->
+        <section id="education-section" class="bg-surface rounded-xl shadow-card p-6">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <i data-lucide="graduation-cap" class="w-5 h-5 text-primary"></i>
+            </div>
+            <h2 class="text-lg font-bold text-on-surface">教育背景</h2>
+          </div>
+          <!-- 时间线 -->
+          <div class="relative pl-8 space-y-6">
+            <!-- 时间线竖线 -->
+            <div class="absolute left-[15px] top-2 bottom-2 w-0.5 bg-gradient-to-b from-accent via-primary/40 to-transparent"></div>
+
+            <!-- 教育经历1-硕士 -->
+            <div class="relative">
+              <div class="absolute -left-8 top-1 w-[30px] h-[30px] rounded-full bg-surface border-2 border-accent flex items-center justify-center">
+                <div class="w-2.5 h-2.5 rounded-full bg-accent"></div>
+              </div>
+              <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+                <h3 class="text-base font-semibold text-on-surface">南开大学</h3>
+                <span class="text-xs font-medium text-accent bg-accent/10 px-2 py-0.5 rounded">硕士阶段</span>
+              </div>
+              <p class="text-sm text-on-surface-variant mb-2">光学工程专业 · 工学硕士</p>
+              <p class="text-sm text-on-surface leading-relaxed">
+                研究方向：微纳光子学与光场调控。参与国家自然科学基金面上项目"微介质锥、纳金属锥和纳金属锥孔中的光场调控"项目的研究工作。
+              </p>
+            </div>
+
+            <!-- 教育经历2-本科 -->
+            <div class="relative">
+              <div class="absolute -left-8 top-1 w-[30px] h-[30px] rounded-full bg-surface border-2 border-primary/40 flex items-center justify-center">
+                <div class="w-2.5 h-2.5 rounded-full bg-primary/60"></div>
+              </div>
+              <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+                <h3 class="text-base font-semibold text-on-surface">泰山学院</h3>
+                <span class="text-xs font-medium text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">本科阶段</span>
+              </div>
+              <p class="text-sm text-on-surface-variant mb-2">光信息科学与技术专业 · 理学学士</p>
+              <p class="text-sm text-on-surface leading-relaxed">
+                主修课程：光学原理、激光原理、光电子技术、半导体物理、信息光学、光学设计等。系统掌握光学与光电子学基础理论，为后续专利代理工作奠定扎实的技术根基。
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== 工作经历 ========== -->
+        <section id="work-section" class="bg-surface rounded-xl shadow-card p-6">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <i data-lucide="briefcase" class="w-5 h-5 text-primary"></i>
+            </div>
+            <h2 class="text-lg font-bold text-on-surface">工作经历</h2>
+          </div>
+          <!-- 时间线 -->
+          <div class="relative pl-8 space-y-6">
+            <!-- 时间线竖线 -->
+            <div class="absolute left-[15px] top-2 bottom-2 w-0.5 bg-gradient-to-b from-accent via-primary/40 to-transparent"></div>
+
+            <!-- 工作经历1-苏州分公司组长 -->
+            <div class="relative">
+              <div class="absolute -left-8 top-1 w-[30px] h-[30px] rounded-full bg-surface border-2 border-accent flex items-center justify-center">
+                <i data-lucide="building-2" class="w-3.5 h-3.5 text-accent"></i>
+              </div>
+              <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+                <h3 class="text-base font-semibold text-on-surface">北京品源专利代理有限公司 · 苏州分公司</h3>
+                <span class="text-xs font-medium text-accent bg-accent/10 px-2 py-0.5 rounded">2023 - 至今</span>
+              </div>
+              <p class="text-sm text-primary font-medium mb-2">电学小组组长</p>
+              <div class="text-sm text-on-surface leading-relaxed space-y-2">
+                <ul class="list-disc list-inside space-y-1 text-on-surface-variant">
+                  <li>担任苏州分公司电学小组组长，负责苏州地区电学业务团队管理与案件质量把控</li>
+                  <li>统筹苏州电学案源分配与进度管理，保障案件交付质量与客户服务质量</li>
+                  <li>负责团队成员的专业培训与业务指导，推动团队整体业务能力提升</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 工作经历2-大客户经理 -->
+            <div class="relative">
+              <div class="absolute -left-8 top-1 w-[30px] h-[30px] rounded-full bg-surface border-2 border-accent/60 flex items-center justify-center">
+                <i data-lucide="users" class="w-3.5 h-3.5 text-accent/70"></i>
+              </div>
+              <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+                <h3 class="text-base font-semibold text-on-surface">北京品源专利代理有限公司 · 国内电学事业部</h3>
+                <span class="text-xs font-medium text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">2022 - 2023</span>
+              </div>
+              <p class="text-sm text-primary font-medium mb-2">大客户经理</p>
+              <div class="text-sm text-on-surface leading-relaxed space-y-2">
+                <ul class="list-disc list-inside space-y-1 text-on-surface-variant">
+                  <li>担任国内电学事业部大客户经理，负责重要客户的案件处理与深度服务</li>
+                  <li>承担新人培养工作，将实务经验系统化传授给新入职代理人</li>
+                  <li>维护重点客户关系，深入了解客户技术布局与专利需求</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 工作经历3-专利工程师 -->
+            <div class="relative">
+              <div class="absolute -left-8 top-1 w-[30px] h-[30px] rounded-full bg-surface border-2 border-primary/40 flex items-center justify-center">
+                <i data-lucide="briefcase" class="w-3.5 h-3.5 text-primary/60"></i>
+              </div>
+              <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+                <h3 class="text-base font-semibold text-on-surface">北京品源专利代理有限公司 · 国内电学事业部</h3>
+                <span class="text-xs font-medium text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">2016 - 2022</span>
+              </div>
+              <p class="text-sm text-primary font-medium mb-2">专利工程师</p>
+              <div class="text-sm text-on-surface leading-relaxed space-y-2">
+                <ul class="list-disc list-inside space-y-1 text-on-surface-variant">
+                  <li>从事电学领域专利申请代理工作，涵盖专利撰写、审查意见答复、检索、复审等全流程业务</li>
+                  <li>技术领域覆盖电子电路、半导体器件、显示技术、激光雷达、光学等方向</li>
+                  <li>服务天马微电子、维信诺、镭神智能、中科院等多家知名企业与科研院所</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== 典型案例 / 代表业绩 ========== -->
+        <section id="cases-section" class="bg-surface rounded-xl shadow-card p-6">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <i data-lucide="trophy" class="w-5 h-5 text-primary"></i>
+            </div>
+            <h2 class="text-lg font-bold text-on-surface">代表业绩与典型案例</h2>
+          </div>
+          <div class="space-y-4">
+            <!-- 案例1 -->
+            <div class="p-4 rounded-lg bg-gradient-to-r from-primary/5 to-transparent border border-outline-variant/20 hover:border-accent/40 transition-colors">
+              <div class="flex items-start justify-between gap-4 mb-2">
+                <h3 class="text-sm font-semibold text-on-surface">显示面板核心技术专利布局</h3>
+                <span class="shrink-0 text-xs font-medium text-accent bg-accent/15 px-2 py-0.5 rounded">重点项目</span>
+              </div>
+              <p class="text-sm text-on-surface-variant mb-2">服务客户：天马微电子 / 维信诺 / 和辉光电 等</p>
+              <p class="text-sm text-on-surface leading-relaxed">
+                深度服务多家显示面板龙头企业，覆盖LCD、LED、OLED、量子点、Micro-LED等多种显示技术方向。从面板工艺制程、测试工艺到封装工艺，提供全链条专利代理服务。凭借扎实的光学与半导体技术功底，精准把握发明点，帮助客户在激烈的显示技术专利竞争中构建稳固的知识产权壁垒。
+              </p>
+            </div>
+
+            <!-- 案例2 -->
+            <div class="p-4 rounded-lg bg-gradient-to-r from-primary/5 to-transparent border border-outline-variant/20 hover:border-accent/40 transition-colors">
+              <div class="flex items-start justify-between gap-4 mb-2">
+                <h3 class="text-sm font-semibold text-on-surface">激光雷达技术专利集群</h3>
+                <span class="shrink-0 text-xs font-medium text-accent bg-accent/15 px-2 py-0.5 rounded">技术专长</span>
+              </div>
+              <p class="text-sm text-on-surface-variant mb-2">服务客户：镭神智能 等激光雷达企业</p>
+              <p class="text-sm text-on-surface leading-relaxed">
+                为激光雷达领军企业提供全方位专利代理服务，涵盖单线程/多线程激光雷达、光学系统设计、信号处理、加工设备等技术方向。结合自身光学工程专业背景，能够深入理解激光雷达的核心技术原理，高效完成专利挖掘与申请文件撰写，助力客户在自动驾驶与智能感知领域建立专利优势。
+              </p>
+            </div>
+
+            <!-- 案例3 -->
+            <div class="p-4 rounded-lg bg-gradient-to-r from-primary/5 to-transparent border border-outline-variant/20 hover:border-accent/40 transition-colors">
+              <div class="flex items-start justify-between gap-4 mb-2">
+                <h3 class="text-sm font-semibold text-on-surface">半导体功率器件与电路专利</h3>
+                <span class="text-xs font-medium text-primary/70 bg-primary/10 px-2 py-0.5 rounded">核心领域</span>
+              </div>
+              <p class="text-sm text-on-surface-variant mb-2">服务客户：能讯 / 晟达力芯 / 广东先进半导体 等</p>
+              <p class="text-sm text-on-surface leading-relaxed">
+                深耕半导体功率器件领域，代理大量功率器件、基础电路元件、像素驱动电路、栅极驱动电路、源极驱动电路、ESD防静电电路、电源电路、信号处理电路等相关专利申请。熟悉半导体器件结构与电路设计原理，能够准确把握技术方案的实质，确保专利申请的保护范围合理有效。
+              </p>
+            </div>
+
+            <!-- 案例4 -->
+            <div class="p-4 rounded-lg bg-gradient-to-r from-primary/5 to-transparent border border-outline-variant/20 hover:border-accent/40 transition-colors">
+              <div class="flex items-start justify-between gap-4 mb-2">
+                <h3 class="text-sm font-semibold text-on-surface">高校与科研院所专利服务</h3>
+                <span class="text-xs font-medium text-primary/70 bg-primary/10 px-2 py-0.5 rounded">产学研服务</span>
+              </div>
+              <p class="text-sm text-on-surface-variant mb-2">服务客户：中科院 / 南方科技大学 / 南京大学 / 清华-伯克利研究院 等</p>
+              <p class="text-sm text-on-surface leading-relaxed">
+                为多家知名高校和科研院所提供专利代理与咨询服务，涵盖前沿光学技术、微纳光子学、半导体材料、智能机器人、信号探测等研究方向。熟悉科研成果的专利转化路径，能够从基础研究成果中挖掘可专利化的技术创新点，协助科研团队高效完成知识产权保护。
+              </p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- 右侧边栏 -->
+      <div class="space-y-8">
+
+        <!-- ========== 专业领域 ========== -->
+        <section id="expertise-section" class="bg-surface rounded-xl shadow-card p-6">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center">
+              <i data-lucide="layers" class="w-4.5 h-4.5 text-accent"></i>
+            </div>
+            <h2 class="text-base font-bold text-on-surface">专业领域</h2>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary/10 text-primary text-sm font-medium">
+              <i data-lucide="monitor-smartphone" class="w-3.5 h-3.5"></i>显示技术
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-accent/15 text-accent text-sm font-medium">
+              <i data-lucide="microchip" class="w-3.5 h-3.5"></i>半导体技术
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary/10 text-primary text-sm font-medium">
+              <i data-lucide="radar" class="w-3.5 h-3.5"></i>激光雷达
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary/10 text-primary text-sm font-medium">
+              <i data-lucide="circuit-board" class="w-3.5 h-3.5"></i>电子电路
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary/10 text-primary text-sm font-medium">
+              <i data-lucide="sun" class="w-3.5 h-3.5"></i>LCD / LED / OLED
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary/10 text-primary text-sm font-medium">
+              <i data-lucide="scan" class="w-3.5 h-3.5"></i>光刻工艺
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary/10 text-primary text-sm font-medium">
+              <i data-lucide="glasses" class="w-3.5 h-3.5"></i>AR / VR 显示
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary/10 text-primary text-sm font-medium">
+              <i data-lucide="fingerprint" class="w-3.5 h-3.5"></i>传感器技术
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary/10 text-primary text-sm font-medium">
+              <i data-lucide="zap" class="w-3.5 h-3.5"></i>功率器件
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary/10 text-primary text-sm font-medium">
+              <i data-lucide="bot" class="w-3.5 h-3.5"></i>智能机器人
+            </span>
+          </div>
+        </section>
+
+        <!-- ========== 执业范围 ========== -->
+        <section id="certificates-section" class="bg-surface rounded-xl shadow-card p-6">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center">
+              <i data-lucide="file-check-2" class="w-4.5 h-4.5 text-accent"></i>
+            </div>
+            <h2 class="text-base font-bold text-on-surface">执业范围</h2>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container/50">
+              <div class="w-8 h-8 shrink-0 rounded-md bg-primary/10 flex items-center justify-center">
+                <i data-lucide="pen-tool" class="w-4 h-4 text-primary"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-sm font-semibold text-on-surface">专利撰写</h4>
+                <p class="text-xs text-on-surface-variant mt-0.5">发明 / 实用新型申请文件撰写</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container/50">
+              <div class="w-8 h-8 shrink-0 rounded-md bg-primary/10 flex items-center justify-center">
+                <i data-lucide="message-square-text" class="w-4 h-4 text-primary"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-sm font-semibold text-on-surface">审查意见答复</h4>
+                <p class="text-xs text-on-surface-variant mt-0.5">驳回意见分析与答复策略制定</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container/50">
+              <div class="w-8 h-8 shrink-0 rounded-md bg-primary/10 flex items-center justify-center">
+                <i data-lucide="search" class="w-4 h-4 text-primary"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-sm font-semibold text-on-surface">专利检索</h4>
+                <p class="text-xs text-on-surface-variant mt-0.5">现有技术检索 / 新颖性创造性分析</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container/50">
+              <div class="w-8 h-8 shrink-0 rounded-md bg-primary/10 flex items-center justify-center">
+                <i data-lucide="repeat" class="w-4 h-4 text-primary"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-sm font-semibold text-on-surface">复审 / 咨询</h4>
+                <p class="text-xs text-on-surface-variant mt-0.5">复审请求 / 专利法律咨询</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 rounded-lg bg-surface-container/50">
+              <div class="w-8 h-8 shrink-0 rounded-md bg-primary/10 flex items-center justify-center">
+                <i data-lucide="lightbulb" class="w-4 h-4 text-primary"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-sm font-semibold text-on-surface">专利挖掘</h4>
+                <p class="text-xs text-on-surface-variant mt-0.5">技术方案挖掘与专利布局规划</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== 服务客户 ========== -->
+        <section id="positions-section" class="bg-surface rounded-xl shadow-card p-6">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center">
+              <i data-lucide="building-2" class="w-4.5 h-4.5 text-accent"></i>
+            </div>
+            <h2 class="text-base font-bold text-on-surface">服务客户（部分）</h2>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-sm">
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">天马微电子</span>
+            </div>
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">维信诺</span>
+            </div>
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">镭神智能</span>
+            </div>
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">和辉光电</span>
+            </div>
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">中科院</span>
+            </div>
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">南方科技大学</span>
+            </div>
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">南京大学</span>
+            </div>
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">清华-伯克利研究院</span>
+            </div>
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">龙腾光电</span>
+            </div>
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">宇瞳光学</span>
+            </div>
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">惠科</span>
+            </div>
+            <div class="flex items-center gap-2 px-2.5 py-2 rounded-md bg-surface-container/40">
+              <i data-lucide="check" class="w-3.5 h-3.5 text-accent shrink-0"></i>
+              <span class="text-on-surface text-xs truncate">立讯</span>
+            </div>
+          </div>
+          <p class="text-xs text-on-surface-variant mt-3 text-center">服务客户40余家，涵盖企业与科研院所</p>
+        </section>
+
+        <!-- ========== 擅长业务 ========== -->
+        <section id="services-section" class="bg-surface rounded-xl shadow-card p-6">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-9 h-9 rounded-lg bg-accent/15 flex items-center justify-center">
+              <i data-lucide="sparkles" class="w-4.5 h-4.5 text-accent"></i>
+            </div>
+            <h2 class="text-base font-bold text-on-surface">擅长业务</h2>
+          </div>
+          <div class="space-y-2">
+            <div class="flex items-center justify-between py-2 border-b border-outline-variant/10 last:border-0">
+              <span class="text-sm text-on-surface">专利撰写与申请</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-accent"></i>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-outline-variant/10 last:border-0">
+              <span class="text-sm text-on-surface">审查意见答复</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-accent"></i>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-outline-variant/10 last:border-0">
+              <span class="text-sm text-on-surface">专利检索与分析</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-accent"></i>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-outline-variant/10 last:border-0">
+              <span class="text-sm text-on-surface">专利复审代理</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-accent"></i>
+            </div>
+            <div class="flex items-center justify-between py-2 border-b border-outline-variant/10 last:border-0">
+              <span class="text-sm text-on-surface">专利挖掘与布局</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-accent"></i>
+            </div>
+            <div class="flex items-center justify-between py-2">
+              <span class="text-sm text-on-surface">知识产权咨询</span>
+              <i data-lucide="chevron-right" class="w-4 h-4 text-accent"></i>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ========== 底部联系引导 ========== -->
+    <section id="contact-cta" class="mt-12 bg-gradient-to-r from-primary via-primary-container to-primary rounded-xl overflow-hidden relative">
+      <div class="absolute inset-0 opacity-5">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-accent rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 right-0 w-80 h-80 bg-accent rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+      </div>
+      <div class="relative px-8 py-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div class="max-w-2xl">
+          <h2 class="text-xl md:text-2xl font-bold text-on-primary mb-2">如需专利相关服务，欢迎联系我</h2>
+          <p class="text-sm text-on-primary/70 leading-relaxed">
+            无论您是需要专利申请代理、专利布局规划，还是面对专利无效、侵权纠纷等问题，我都将以专业、严谨的态度为您提供优质的知识产权服务。
+          </p>
+          <div class="flex flex-wrap gap-x-6 gap-y-2 mt-4 text-sm text-on-primary/90">
+            <div class="flex items-center gap-2">
+              <i data-lucide="mail" class="w-4 h-4 text-accent"></i>
+              <span>gaoxuefeng@boip.com.cn</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="phone" class="w-4 h-4 text-accent"></i>
+              <span>0512-89889809</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="map-pin" class="w-4 h-4 text-accent"></i>
+              <span>苏州吴中区东吴北路28号国裕创新大厦二期1008室</span>
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a href="contact.html" id="btn-cta-contact" class="inline-flex items-center justify-center gap-2 bg-accent text-primary px-6 py-3 rounded-md text-sm font-semibold hover:bg-accent-light transition-colors">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            立即咨询
+          </a>
+          <a href="contact.html" id="btn-cta-detail" class="inline-flex items-center justify-center gap-2 bg-white/10 text-on-primary border border-white/20 px-6 py-3 rounded-md text-sm font-medium hover:bg-white/20 transition-colors">
+            <i data-lucide="user" class="w-4 h-4"></i>
+            查看完整联系方式
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="mt-10 pb-4 text-center">
+      <p class="text-xs text-on-surface-variant">© 2026  专利代理人 · 高学锋</p>
+    </footer>
+
+    <!-- @main-content:end -->
+  </main>
+
+  <script>
+  $(function() {
+    // 下载简历按钮 - 点击触发简历下载
+    // 实际实现步骤：
+    // 1. 向后端请求生成PDF简历文件
+    // 2. 显示下载中状态（按钮loading）
+    // 3. 文件生成完成后创建隐藏a标签触发下载
+    // 4. 恢复按钮初始状态
+    $('#btn-download-resume').on('click', function() {
+      console.log('下载简历PDF - 需要调用后端生成简历文件接口');
+      // 原型演示：模拟下载提示
+      alert('简历下载功能：实际项目中需调后端接口生成PDF文件');
+    });
+
+    // 顶部联系按钮 - 跳转到联系页面
+    $('#btn-contact-top').on('click', function(e) {
+      // 跳转由href属性实现，此处可添加埋点统计
+      console.log('点击顶部联系我按钮，跳转到contact.html');
+    });
+
+    // 底部CTA立即咨询按钮 - 跳转到联系页面
+    $('#btn-cta-contact').on('click', function(e) {
+      console.log('点击底部立即咨询按钮，跳转到contact.html');
+    });
+
+    // 底部查看详情按钮 - 跳转到联系页面
+    $('#btn-cta-detail').on('click', function(e) {
+      console.log('点击查看完整联系方式按钮，跳转到contact.html');
+    });
+  });
+  </script>
+
+  <script>lucide.createIcons();</script>
+</body>
+
+</html>
