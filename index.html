@@ -528,12 +528,7 @@
 
   <script>
     $(function() {
-      // 智能体入口按钮 - 点击事件
-      // 后续应实现：点击后跳转到智能体聊天页面或打开聊天弹窗
-      $('#btn-agent-start').on('click', function() {
-        console.log('启动专利教练智能体');
-        // TODO: 跳转至智能体对话页或唤起聊天窗口
-      });
+      // 智能体入口按钮点击事件已移至 Coze SDK 初始化代码中
 
       // 立即咨询按钮 - 跳转联系页
       $('#btn-consult').on('click', function(e) {
@@ -549,6 +544,55 @@
   </script>
 
   <script>lucide.createIcons();</script>
+
+  <!-- Coze WebChat SDK -->
+  <script>
+    var cozeClient = null;
+    var cozeSDKReady = false;
+
+    function initCozeSDK() {
+      if (typeof CozeWebSDK !== 'undefined' && CozeWebSDK.WebChatClient) {
+        try {
+          cozeClient = new CozeWebSDK.WebChatClient({
+            config: {
+              bot_id: '7661518969198624777',
+            },
+            componentProps: {
+              title: 'Coze',
+            },
+            auth: {
+              type: 'token',
+              token: 'pat_4ChDAx0dfagXwRpxGKOszsMe3HGueQfApt5Ds6MSTExCZyNFi1N3XX5omxAaaq4w',
+              onRefreshToken: function () {
+                return 'pat_4ChDAx0dfagXwRpxGKOszsMe3HGueQfApt5Ds6MSTExCZyNFi1N3XX5omxAaaq4w'
+              }
+            }
+          });
+          cozeSDKReady = true;
+          console.log('Coze SDK 初始化成功');
+        } catch (e) {
+          console.error('Coze SDK 初始化失败:', e);
+        }
+      } else {
+        console.error('CozeWebSDK 未定义，SDK可能未加载成功');
+      }
+    }
+  </script>
+  <script src="https://lf-cdn.coze.cn/obj/unpkg/flow-platform/chat-app-sdk/1.2.0-beta.19/libs/cn/index.js" onload="initCozeSDK()"></script>
+  <script>
+    // 按钮点击打开聊天窗口
+    $(function() {
+      $('#btn-agent-start').on('click', function(e) {
+        e.preventDefault();
+        if (cozeClient && typeof cozeClient.open === 'function') {
+          cozeClient.open();
+        } else {
+          console.error('Coze SDK 未正确加载，cozeClient=', cozeClient);
+          alert('智能体加载失败，请确认通过 HTTP(S) 协议访问页面（而非直接双击打开 HTML 文件），或刷新页面重试');
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
